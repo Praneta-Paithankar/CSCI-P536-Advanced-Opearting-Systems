@@ -17,40 +17,41 @@ int  main(int argc,char*argv[]){
 	}
 	if(pipe(fd)==-1) //Create Pipe
 	{
-		perror("Pipe");
+		perror("Pipe"); //if creation pipe fails
 		exit(1);
 	}
 	pid=fork();	//Fork the process
 	if(pid==-1)
 	{
-		perror("Fork");
+		perror("Fork"); //if creation of child process fails
 		exit(1);
 	}
 	if(pid >0) //parent process
 	{
-		printf("\nParent Pid =  %d.",getpid());
+		printf("\nParent PID =  %d.",getpid());
                 close(fd[0]);   //close read  descriptor
-                count=write(fd[1],&argv[1],strlen(argv[1])+1);
+                count=write(fd[1],&argv[1],strlen(argv[1])+1);//Write program path
                 if(count==-1)
                 {
                         perror("write");
                 }
-                close(fd[1]);
+                close(fd[1]); //close write descriptor
                 wait(NULL);
 		exit(0);
 	}
 	if(pid==0) //Child process
 	{
-		close(fd[1]);
-		printf("\nChild Pid =  %d.",getpid());
-		//close(fd[1]);	//Close write descriptor
-		count=read(fd[0],&buffer,sizeof(buffer));
+		
+		printf("\nChild PID =  %d.",getpid());
+		close(fd[1]);	//Close write descriptor
+		count=read(fd[0],&buffer,sizeof(buffer));//read program path
 		if(count<=0)
 		{
 			perror("Read");
 			exit(-1);
 		}
-		command=buffer+5;
+		printf("\nChild PID =%d",getpid());
+		command=buffer+5;	//read program name from path e.g /bin/echo is path then echo is command
 		if (!strcmp(buffer,"/bin/echo"))
 		{	execl(buffer,command,"Hello World!",(char*)NULL);
 			perror("execl");
@@ -59,7 +60,7 @@ int  main(int argc,char*argv[]){
 			execl(buffer,command,(char *) NULL);
 			perror("execl");
 		}
-		close(fd[0]);
+		close(fd[0]);//close read descriptor
 		exit(0);
 	}
 	return 0;
