@@ -12,7 +12,7 @@ int  main(int argc,char*argv[]){
 	char * command=NULL;
 	if(argc !=2)
 	{	
-		fprintf(stderr,"Usage %s <path to another program>.",argv[0]);
+		fprintf(stderr,"Invalid number of arguments.\nCorrect usage: %s <path to another program>.\n",argv[0]);
 		exit(1);
 	}
 	if(pipe(fd)==-1) //Create Pipe
@@ -30,7 +30,7 @@ int  main(int argc,char*argv[]){
 	{
 		printf("Parent PID =  %d.\n",getpid());
                 close(fd[0]);   //close read  descriptor
-                count=write(fd[1],&argv[1],strlen(argv[1]+1));//Write program path
+                count=write(fd[1],&argv[1],strlen(argv[1]));//Write program path
 		if(count==-1)
                 {
                         perror("write");
