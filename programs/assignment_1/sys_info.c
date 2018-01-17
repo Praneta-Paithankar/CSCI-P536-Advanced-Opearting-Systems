@@ -28,21 +28,20 @@ int  main(int argc,char*argv[]){
 	}
 	if(pid >0) //parent process
 	{
-		printf("\nParent PID =  %d.",getpid());
+		printf("Parent PID =  %d.\n",getpid());
                 close(fd[0]);   //close read  descriptor
-                count=write(fd[1],&argv[1],strlen(argv[1])+1);//Write program path
-                if(count==-1)
+                count=write(fd[1],&argv[1],strlen(argv[1]+1));//Write program path
+		if(count==-1)
                 {
                         perror("write");
                 }
                 close(fd[1]); //close write descriptor
                 wait(NULL);
-		exit(0);
 	}
-	if(pid==0) //Child process
+	else if(pid==0) //Child process
 	{
 		
-		printf("\nChild PID =  %d.",getpid());
+		printf("Child PID =  %d.\n",getpid());
 		close(fd[1]);	//Close write descriptor
 		count=read(fd[0],&buffer,sizeof(buffer));//read program path
 		if(count<=0)
@@ -50,18 +49,16 @@ int  main(int argc,char*argv[]){
 			perror("Read");
 			exit(-1);
 		}
-		printf("\nChild PID =%d",getpid());
 		command=buffer+5;	//read program name from path e.g /bin/echo is path then echo is command
 		if (!strcmp(buffer,"/bin/echo"))
 		{	execl(buffer,command,"Hello World!",(char*)NULL);
-			perror("execl");
+			perror(command);
 		}else
 		{
 			execl(buffer,command,(char *) NULL);
 			perror("execl");
 		}
 		close(fd[0]);//close read descriptor
-		exit(0);
 	}
 	return 0;
 }
