@@ -19,3 +19,9 @@ Answer:
     When child process calls the exec system call, first copy of text segment and data segment will be created.Parent process and child process points to different data and text segments.
     The exec call replace the entire child process with a new program. It loads the program into the current process space and runs it from the entry point.That means exec call scraps the text and data 
     segments of child process and replaces them with the text and user data of a program specified in the argument. 
+
+
+References:
+1)https://en.wikipedia.org/wiki/Zombie_process
+2)https://stackoverflow.com/questions/20688982/zombie-process-vs-orphan-proces
+3)http://www.cems.uwe.ac.uk/~irjohnso/coursenotes/lrc/system/pc/pc4.htms
