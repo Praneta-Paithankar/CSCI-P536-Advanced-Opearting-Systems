@@ -8,16 +8,12 @@
  *    */
 shellcmd xsh_hello(int nargs, char *args[]) {
 
-        int32   retval;                 /* return value                 */
-        uint32  now;                    /* current local time           */
-        char    datestr[64];            /* printable date in ascii      */
-
         /* Output info for '--help' argument */
 
         if (nargs == 2 && strncmp(args[1], "--help", 7) == 0) {
                 printf("Usage: %s\n\n", args[0]);
                 printf("Description:\n");
-                printf("\tprint the string.\n");
+                printf("\tDisplay the message.\n");
                 printf("Options (one per invocation):\n");
                	printf("\t--help\tdisplay this help and exit\n");
                 return 0;
@@ -43,4 +39,5 @@ shellcmd xsh_hello(int nargs, char *args[]) {
         if (nargs == 2) {
                printf("Hello %s, Welcome to the world of Xinu!!",args[1]);
         }
+	return 0;
 }

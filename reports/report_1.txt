@@ -1,0 +1,21 @@
+Q.1 What are Orphan and Zombie processes?
+Answer:
+  1)Orphan process is a computer process which is still executing and its parent process has finished or terminated.
+    In Linux operating system, this scenario is addressed by automatically assigning the init system process as the new parent to orphan processes.
+    This operation is called as reparenting.The init process periodically invokes wait() and collects the exit status of any orphan process.
+    After collecting the status of orphan process from process table, its process identifier and process table entry will be released.
+  2)Zombie process is a process who has finished its execution but still has an entry in process table.All resources of zombie process are deallocated by operating systems.
+    The parent process can read the exit status of zombie process from the process table by executing  wait() call.After this , entry of zombie process can be removed from process table.
+    After zombie process is removed ,its process identifier and entry in process table can be used.
+    All processes transition to zombie state when they terminate, but they exist as zombies for a short time. Once the parent calls wait(), the process identifier of the zombie process and 
+    its entry in the process table are released.
+    If parent process fails to call wait, entry in process table will exist.It will be considered as resource leak.
+
+Q.2 What are the changes that occur when the child process calls the exec system call to execute a new program?
+Answer:
+    Before exec system call, parent process and child process share the same text segment.Basically parent process and child process have two sets of pointer which point to same text and data segment.
+    In case of data segments, if both processes are only reading data then same copy of data is used.If one of the processes tries to write anything to the data segments, copy of data is created. 
+    This technique is called as copy on write.
+    When child process calls the exec system call, first copy of text segment and data segment will be created.Parent process and child process points to different data and text segments.
+    The exec call replace the entire child process with a new program. It loads the program into the current process space and runs it from the entry point.That means exec call scraps the text and data 
+    segments of child process and replaces them with the text and user data of a program specified in the argument. 
