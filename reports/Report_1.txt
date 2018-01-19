@@ -17,8 +17,7 @@ b. Zombie process
 Q.2 What are the changes that occur when the child process calls the exec system call to execute a new program?
 Answer:
 - Before exec system call, parent process and child process share the same text segment. Basically, parent process and child process have two sets of pointer which point to same text and data segment.
-- In case of data segments, if both processes are only reading data then same copy of data is used. If one of the processes tries to write anything to the data segments, copy of data is created. 
-- This technique is called as copy on write.
+- In case of data segments, if both processes are only reading data then same copy of data is used. If one of the processes tries to write anything to the data segments, copy of data is created. This technique is called as copy on write.
 - When child process calls the exec system call, first copy of text segment and data segment will be created. Parent process and child process points to different data and text segments.
 - The exec call replaces the entire child process with a new program. It loads the program into the current process space and runs it from the entry point. This means exec call scraps the text and data segments of child process and replaces them with the text and user data of a program specified in the argument. 
 
