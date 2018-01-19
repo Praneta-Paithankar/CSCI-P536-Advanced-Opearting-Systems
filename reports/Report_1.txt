@@ -10,8 +10,7 @@ b. Zombie process
 - Zombie process is a process who has finished its execution but still has an entry in process table. All resources of zombie process are deallocated by operating systems.
 - The parent process can read the exit status of zombie process from the process table by executing wait() call. After this, entry of zombie process can be removed from process table.
 - After zombie process is removed, its process identifier and entry in process table can be used.
-- All processes transition to zombie state when they terminate, but they exist as zombies for a short time. Once the parent calls wait(), the process identifier of the zombie process and 
-- its entry in the process table are released.
+- All processes transition to zombie state when they terminate, but they exist as zombies for a short time. Once the parent calls wait(), the process identifier of the zombie process and its entry in the process table are released.
 - If parent process fails to call wait, entry in process table will exist. It will be considered as resource leak.
 
 
