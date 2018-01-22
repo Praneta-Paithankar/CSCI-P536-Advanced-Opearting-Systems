@@ -18,6 +18,7 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 	int32 roundCount=3;
 	int32 i;
 	char * imple="poll";
+	//if --help option is used.
 	if(!strncmp(args[1],"--help",7))
     	{
 		printf("Usage: %s\n\n", args[0]);
@@ -33,9 +34,9 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 	}
 	for(i=1;i<argc;i++)
 	{
-		if(!strncmp(args[i],"-p",3))
+		if(!strncmp(args[i],"-p",3)) //number of processes
 		{
-			if(i+1>argc)
+			if(i+1>argc) //number is missing
 			{
 				printf("-p flag expected an argument\n");
 				return SHELL_ERROR;	
@@ -51,9 +52,9 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 			/* Skip pass the numeric argument,that was successfully parsed */
 			i += 1;
 		}
-		else if(!strncmp(args[i],"-r",3))
+		else if(!strncmp(args[i],"-r",3)) //number of rounds
         	{
-            		if(i+1>argc)
+            		if(i+1>argc) //number is missing
 			{
                 		printf("-r flag expected an argument\n");
                 		print_usage();
@@ -70,9 +71,9 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
             		/* Skip pass the numeric argument,that was successfully parsed */
             		i += 1;
         	}
-		else if(!strncmp(args[i],"-i",3))
+		else if(!strncmp(args[i],"-i",3)) //type of implementation 
 		{
-			if(i+1>argc)
+			if(i+1>argc) //type is missing
 			{
 				printf("-i flag expected an argument\n");
                 		print_usage();
@@ -91,7 +92,7 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 			}
 			i=i+1;
 		}
-		else if(argc==3)
+		else if(argc==3) //progress_ring round_no process_no
 		{
 			roundCount=atoi(args[1]);
            		if (roundCount<=0)
@@ -118,9 +119,9 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
             		}
 			break;
 		}
-        	else
+        	else //invalid options
         	{
-			printf("wrong argument is passed\n");
+			printf("Invalid options.\n");
 			print_usage();
             		return SHELL_ERROR;
         	}
@@ -131,12 +132,12 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 	int32 totalCount=processCount*roundCount-1;
 	int32 processArray[processCount];
 	int32 startTime;
-	if(!strncmp(imple,"poll",5))
+	if(!strncmp(imple,"poll",5)) //polling method
 	{
         	int32 rincrement=0;
         	int32 pincrement=0;
        		int32 currentIndex=0;
-        	startTime=clktime;
+        	startTime=clktime; 
 	        processArray[0]=totalCount;
 		while(totalCount>=0)
 		{
@@ -149,7 +150,7 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 		}
 		printf("Elapsed Seconds: %d\n",clktime-startTime);
 	}
-	else if(!strncmp(imple,"sync",5))
+	else if(!strncmp(imple,"sync",5)) //synchronization
 	{
         	startTime=clktime;
 		pid32 main_pid=getpid();
@@ -160,7 +161,7 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 		send(processArray[0],totalCount);
 		for(i=0;i<processCount;i++)
 		{
-			resume(processArray[i]);
+			resume(processArray[i]); //start execution of processes
 		}
 		receive();
 		printf("Elapsed Seconds: %d\n",clktime-startTime);
