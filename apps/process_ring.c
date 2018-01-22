@@ -18,7 +18,7 @@ process polling2(int32* currentProcess,int32* nextProcess,int32 roundCount,int32
 		{
 			printf("Ring Element %d : Round %d : Value : %d\n",currentRing,currentRound,*currentProcess);	
 			currentRound+=1;
-			*nextprocess=*currentProcess-1;
+			*nextProcess=*currentProcess-1;
 			
 		}
 	}
