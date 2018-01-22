@@ -138,8 +138,10 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
         	int32 pincrement=0;
        		int32 currentIndex=0;
         	startTime=clktime; 
+		for(i=0;i<processCount;i++)
+			processArray[i]=-1;
 	        processArray[0]=totalCount;
-		while(totalCount>=0)
+		/*while(totalCount>=0)
 		{
 			currentIndex=pincrement%processCount;	
 			resume(create(polling,1024,30,"polling",4,&processArray[currentIndex],&processArray[(pincrement+1)%processCount],currentIndex,rincrement));
@@ -147,6 +149,10 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 				rincrement+=1;
 			pincrement+=1;
 			totalCount-=1;
+		}*/
+		for(i=0;i<processCount;i++)
+		{
+			resume(create(polling2,1024,30,"polling",4,&processArray[i],&processArray[(i+1)%processCount],roundCount,i));
 		}
 		printf("Elapsed Seconds: %d\n",clktime-startTime);
 	}
