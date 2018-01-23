@@ -9,21 +9,6 @@ process  polling(int32* currentProcess,int32* nextProcess,int32 currentRing,int3
 	return OK;
 }
 
-process polling2(int32* currentProcess,int32* nextProcess,int32 roundCount,int32 currentRing)
-{
-	int32 currentRound=0;
-	while(currentRound<roundCount)
-	{
-		if(*currentProcess!=-1)
-		{
-			printf("Ring Element %d : Round %d : Value : %d\n",currentRing,currentRound,*currentProcess);	
-			currentRound+=1;
-			*nextProcess=*currentProcess-1;
-			
-		}
-	}
-	return OK;
-}
 /*Synchronization using message passing*/
 process message_passing(pid32 mainPid,pid32* nextProcessPid,int32 roundCount,int32 currentRing)
 {
