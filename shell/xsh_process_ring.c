@@ -42,10 +42,10 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 				return SHELL_ERROR;	
 			}
 			processCount=atoi(args[i+1]);
-			if (!(0 < processCount && processCount <= 64))
+			if (!(0 < processCount && processCount <= 32))
 			{
                 		/* The number is out of range */
-				printf("-p flag expected a number between 0 - 64\n");
+				printf("-p flag expected a number between 0 - 32\n");
                 		print_usage();
                 		return SHELL_ERROR;
             		}
@@ -61,10 +61,10 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
                 		return SHELL_ERROR;
             		}
            		roundCount=atoi(args[i+1]);
-            		if (roundCount<=0)
+            		if(! (roundCount<=100 && 0<=roundCount ))
             		{
                 		/* The number is negative*/
-                		printf("-r flag expected positive number\n");
+                		printf("-r flag expected number between 0-100\n");
                 		print_usage();
                 		return SHELL_ERROR;
             		}
@@ -95,10 +95,10 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 		else if(argc==3) //progress_ring round_no process_no
 		{
 			roundCount=atoi(args[1]);
-           		if (roundCount<=0)
+           		if(! (roundCount<=100 && 0<=roundCount ))
             		{
                 		/* The number is out of range */
-              		 	printf("-r flag expected positive number\n");
+              		 	printf("-r flag expected a number between 0-100.\n");
                			print_usage();
                 		return SHELL_ERROR;
             		}
@@ -110,13 +110,60 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
                 		print_usage();
                 		return SHELL_ERROR;
 			}
-			else if (!(0 <= processCount && processCount <= 64)) 
+			else if (!(0 <= processCount && processCount <= 32)) 
 			{
         		        /* The number is out of range */
-                		printf("-p flag expected a number between 0 - 64\n");
+                		printf("-p flag expected a number between 0 - 32.\n");
                 		print_usage();
                 		return SHELL_ERROR;
             		}
+			break;
+		}
+		else if (argc == 5)
+		{
+			roundCount=atoi(args[1]);
+           		if(! (roundCount<=100 && 0<=roundCount ))
+            		{
+                		/* The number is out of range */
+              		 	printf("-r flag expected a number between 0-100.\n");
+               			print_usage();
+                		return SHELL_ERROR;
+            		}
+            		processCount=atoi(args[i+1]);
+			if(processCount==0)
+			{
+				/* No number was parsed.*/
+                		printf("-p flag expected an integer\n");
+                		print_usage();
+                		return SHELL_ERROR;
+			}
+			else if (!(0 <= processCount && processCount <= 32)) 
+			{
+        		        /* The number is out of range */
+                		printf("-p flag expected a number between 0 - 32.\n");
+                		print_usage();
+                		return SHELL_ERROR;
+            		}
+			if(!strncmp(args[3],"-i",3)) //type of implementation 
+			{
+				if((!strncmp(args[4],"poll",5))||(!strncmp(args[4],"sync",5) ))
+				{
+					imple=args[4];
+				}
+				else	
+				{
+					print_usage();
+		               		printf("-i flag expected argument as 'poll' or 'sync'\n");
+        		        	print_usage();
+                			return SHELL_ERROR;
+				}
+			}
+			else
+			{
+				printf("Invalid options");
+				print_usage();
+				return SHELL_ERROR;
+			}
 			break;
 		}
         	else //invalid options
@@ -129,26 +176,25 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 	}
 	printf("Number of Processes: %d\n",processCount);
 	printf("Number of Rounds: %d\n",roundCount);
+	printf("Method : %s\n",imple);
 	int32 totalCount=processCount*roundCount-1;
 	int32 processArray[processCount];
 	int32 startTime;
 	if(!strncmp(imple,"poll",5)) //polling method
 	{
-        	int32 rincrement=0;
-        	int32 pincrement=0;
-       		int32 currentIndex=0;
         	startTime=clktime; 
+		int32 process_pid[processCount];
+	        processArray[0]=totalCount;   
+        	for(i=0;i<processCount;i++)
+        	{
+            		process_pid[i]=create(polling,1024,20,"polling",5,i,&processCount,&roundCount,&processArray,&processArray[i]);
+       		}
 		for(i=0;i<processCount;i++)
-			processArray[i]=-1;
-	        processArray[0]=totalCount;
-		while(totalCount>=0)
 		{
-			currentIndex=pincrement%processCount;	
-			resume(create(polling,1024,30,"polling",4,&processArray[currentIndex],&processArray[(pincrement+1)%processCount],currentIndex,rincrement));
-			if(((pincrement+1)%processCount)== 0)
-				rincrement+=1;
-			pincrement+=1;
-			totalCount-=1;
+			resume(process_pid[i]);
+		}
+		while(processArray[processCount-1]!= -5){
+			printf("");	
 		}
 		printf("Elapsed Seconds: %d\n",clktime-startTime);
 	}

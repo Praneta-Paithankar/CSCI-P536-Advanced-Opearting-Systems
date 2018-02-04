@@ -2,11 +2,29 @@
 #include<stdio.h>
 #include<process_ring.h>
 /*Polling function */
-process  polling(int32* currentProcess,int32* nextProcess,int32 currentRing,int32 currentRound)
+process  polling(int32 currentRing,int32* totalProcess,int32* totalRound,int32* inbox,volatile int *currentElement)
 {
-	*nextProcess=*currentProcess-1;
-	printf("Ring Element %d : Round %d : Value : %d\n",currentRing,currentRound,*currentProcess);	
-	return OK;
+ 
+    int32 currentRound=0;
+    int32 prevVal=-1;
+    int32 processCount= *totalProcess;
+    int32 roundCount = *totalRound;
+    while(currentRound< roundCount)
+    {
+        int32 value=*currentElement;
+        if(prevVal != value)
+        {
+            printf("Ring Element %d : Round %d : Value : %d \n",currentRing,currentRound,value);
+            inbox[(currentRing+1)% processCount]=value-1;
+            currentRound++;
+            prevVal=value;
+	    if(value == 0)
+	    {
+		inbox[currentRing]=-5;
+	    }
+       }
+    }
+    return OK;
 }
 
 /*Synchronization using message passing*/
