@@ -1,0 +1,16 @@
+1.What are 2 things that you learned from this assignment?
+    In this assignment, we learnt about methods used in xinu like message passing to synchronize the processes
+    We also learnt to use polling function in this assignment and gained deeper insights in xinu.
+    
+2.What are 2 mistakes that you made in this assignment, and how did you discover and fix these mistakes?
+    While creating another process, I used priority no. as 30 in the create function, it created some anomalies in xinu for me. 
+    I later changed it according to 20 to avoid those anomalies.
+    In polling, my processes were running without infinitely initially as I wasn't handling exit condition. 
+    
+3.If you were restarting this assignment, what would you change about how you went about completing this assignment?
+    I should have done message passing first, as I could learn exactly how the message passing between two processes work, so that would have also assisted me in polling.
+    So, I would have used multiple rounds directly in polling rather than polling for single first and then changing it for multiple rounds.
+
+
+
+
