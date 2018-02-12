@@ -434,6 +434,10 @@ extern	umsg32	recvtime(int32);
 extern	void	resched(void);
 extern	status	resched_cntl(int32);
 
+/*in file resched2.c*/
+extern void resched2(int32);
+
+
 /* in file intutils.S */
 extern	void	restore(intmask);
 

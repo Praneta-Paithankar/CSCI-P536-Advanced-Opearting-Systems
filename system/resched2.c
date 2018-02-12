@@ -5,10 +5,10 @@
 struct	defer	Defer;
 
 /*------------------------------------------------------------------------
- *  resched  -  Reschedule processor to highest priority eligible process
+ *  resched2  -  Reschedule processor to highest priority eligible process
  *------------------------------------------------------------------------
  */
-status	resched2(int32 next_state)		/* Assumes interrupts are disabled	*/
+void	resched2(int32 next_state)		/* Assumes interrupts are disabled	*/
 {
 	struct procent *ptold;	/* Ptr to table entry for old process	*/
 	struct procent *ptnew;	/* Ptr to table entry for new process	*/
@@ -16,14 +16,14 @@ status	resched2(int32 next_state)		/* Assumes interrupts are disabled	*/
 	/*next state should have value from 0 to 7*/
 	if(!(next_state>=0 && next_state<=7))
 	{
-		return SYSERR;
+		return;
 	}
 
 	/* If rescheduling is deferred, record attempt and return */
 
 	if (Defer.ndefers > 0) {
 		Defer.attempt = TRUE;
-		return OK;
+		return ;
 	}
 
 	/* Point to process table entry for the current (old) process */
@@ -32,7 +32,7 @@ status	resched2(int32 next_state)		/* Assumes interrupts are disabled	*/
 
 	if (next_state == PR_CURR) {  /* Process remains eligible */
 		if (ptold->prprio > firstkey(readylist)) {
-			return OK;
+			return;
 		}
 
 		/* Old process will no longer remain current */
@@ -61,5 +61,35 @@ status	resched2(int32 next_state)		/* Assumes interrupts are disabled	*/
 
 	/* Old process returns here when resumed */
 	
-	return OK;
+	return ;
+}
+/*------------------------------------------------------------------------
+ *  resched_cntl  -  Control whether rescheduling is deferred or allowed
+ *------------------------------------------------------------------------
+ */
+status	resched2_cntl(		/* Assumes interrupts are disabled	*/
+	  int32	defer		/* Either DEFER_START or DEFER_STOP	*/
+	)
+{
+	switch (defer) {
+
+	    case DEFER_START:	/* Handle a deferral request */
+
+		if (Defer.ndefers++ == 0) {
+			Defer.attempt = FALSE;
+		}
+		return OK;
+
+	    case DEFER_STOP:	/* Handle end of deferral */
+		if (Defer.ndefers <= 0) {
+			return SYSERR;
+		}
+		if ( (--Defer.ndefers == 0) && Defer.attempt ) {
+			resched2(PR_CURR);
+		}
+		return OK;
+
+	    default:
+		return SYSERR;
+	}
 }

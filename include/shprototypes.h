@@ -3,6 +3,9 @@ extern	shellcmd  xsh_argecho	(int32, char *[]);
 
 /* in file xsh_hello.c */
 extern shellcmd xsh_hello	(int, char *[]);
+/* in file xsh_resched_check.c*/
+extern shellcmd xsh_resched_check(int argc, char *args[]); 
+	
 
 /* in file xsh_process_ring.c*/
 extern shellcmd xsh_process_ring(int argc, char *argv[]);

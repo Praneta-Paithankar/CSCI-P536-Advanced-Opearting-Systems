@@ -61,7 +61,7 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
                 		return SHELL_ERROR;
             		}
            		roundCount=atoi(args[i+1]);
-            		if(! (roundCount<=100 && 0<=roundCount ))
+            		if(! (roundCount<=100 && 0<roundCount ))
             		{
                 		/* The number is negative*/
                 		printf("-r flag expected number between 0-100\n");
@@ -95,7 +95,7 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 		else if(argc==3) //progress_ring round_no process_no
 		{
 			roundCount=atoi(args[1]);
-           		if(! (roundCount<=100 && 0<=roundCount ))
+           		if(! (roundCount<=100 && 0<roundCount ))
             		{
                 		/* The number is out of range */
               		 	printf("-r flag expected a number between 0-100.\n");
@@ -110,7 +110,7 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
                 		print_usage();
                 		return SHELL_ERROR;
 			}
-			else if (!(0 <= processCount && processCount <= 32)) 
+			else if (!(0 < processCount && processCount <= 32)) 
 			{
         		        /* The number is out of range */
                 		printf("-p flag expected a number between 0 - 32.\n");
@@ -122,7 +122,7 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
 		else if (argc == 5)
 		{
 			roundCount=atoi(args[1]);
-           		if(! (roundCount<=100 && 0<=roundCount ))
+           		if(! (roundCount<=100 && 0<roundCount ))
             		{
                 		/* The number is out of range */
               		 	printf("-r flag expected a number between 0-100.\n");
@@ -137,7 +137,7 @@ shellcmd xsh_process_ring(int argc, char *args[]) {
                 		print_usage();
                 		return SHELL_ERROR;
 			}
-			else if (!(0 <= processCount && processCount <= 32)) 
+			else if (!(0 < processCount && processCount <= 32)) 
 			{
         		        /* The number is out of range */
                 		printf("-p flag expected a number between 0 - 32.\n");
