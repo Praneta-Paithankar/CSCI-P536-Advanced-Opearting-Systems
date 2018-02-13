@@ -29,7 +29,7 @@ void	resched2(int32 next_state)		/* Assumes interrupts are disabled	*/
 	/* Point to process table entry for the current (old) process */
 
 	ptold = &proctab[currpid];
-
+	ptold->prstate=next_state;
 	if (next_state == PR_CURR) {  /* Process remains eligible */
 		if (ptold->prprio > firstkey(readylist)) {
 			return;
@@ -41,7 +41,6 @@ void	resched2(int32 next_state)		/* Assumes interrupts are disabled	*/
 		insert(currpid, readylist, ptold->prprio);
 	}
 	if(next_state==PR_READY){ // Process is ready to execute
-
 		insert(currpid,readylist,ptold->prprio);
 	
 	}
