@@ -27,7 +27,7 @@ struct qnewentry{
 
 extern	struct qentry	queuetab[];
 
-struct qnewentry queuearr[];
+struct qnewentry*  queuearr[4];
 /* Inline queue manipulation functions */
 
 #define	queuehead(q)	(q)
