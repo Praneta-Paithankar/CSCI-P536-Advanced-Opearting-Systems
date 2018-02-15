@@ -18,6 +18,13 @@ struct	qentry	{		/* One per process plus two per list	*/
 	qid16	qprev;		/* Index of previous process or head	*/
 };
 
+struct qnewentry{
+	int32 qkey;
+	pid32 process_id;
+	struct qnewentry* qnext;
+	struct qnewentry* qprev;
+}
+
 extern	struct qentry	queuetab[];
 
 /* Inline queue manipulation functions */
