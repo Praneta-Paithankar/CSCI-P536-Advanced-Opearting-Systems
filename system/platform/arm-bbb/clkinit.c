@@ -35,7 +35,7 @@ void	clkinit(void)
 
 	set_evec(AM335X_TIMER1MS_IRQ, (uint32)clkhandler);
 
-	sleepq = newqueue();	/* Allocate a queue to hold the delta	*/
+	sleepq = NQENT+2;	/* Allocate a queue to hold the delta	*/
 				/*   list of sleeping processes		*/
 
 	preempt = QUANTUM;	/* Set the preemption time		*/

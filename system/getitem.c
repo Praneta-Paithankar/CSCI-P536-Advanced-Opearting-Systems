@@ -13,9 +13,7 @@ pid32	getfirst(
 {
 	pid32	head;
 
-	if (isempty(q)) {
-		return EMPTY;
-	}
+	
         if(q ==readylist || q==sleepq)
 	{
 		struct qnewentry *curr,*qhead;
@@ -33,6 +31,9 @@ pid32	getfirst(
 		freemem((char * )curr,sizeof(struct qnewentry ));
 		
 	}
+    if (isempty(q)) {
+        return EMPTY;
+    }
 	head = queuehead(q);
 	return getitem(queuetab[head].qnext);
 }
@@ -48,9 +49,6 @@ pid32	getlast(
 {
 	pid32 tail;
 
-	if (isempty(q)) {
-		return EMPTY;
-	}
 	
 	if(q==readylist || q==sleepq)
 	{
@@ -71,6 +69,10 @@ pid32	getlast(
 		freemem((char * )curr,sizeof(struct qnewentry ));
 		
 	}
+    if (isempty(q)) {
+        return EMPTY;
+    }
+    
 	tail = queuetail(q);
 	return getitem(queuetab[tail].qprev);
 }

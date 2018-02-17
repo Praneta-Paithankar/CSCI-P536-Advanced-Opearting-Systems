@@ -85,7 +85,6 @@ void	nulluser()
 		(uint32)&data, (uint32)&ebss - 1);
 
 	/* Enable interrupts */
-
 	enable();
 #ifdef ETHER0
 	/* Initialize the network stack and start processes */
@@ -101,17 +100,13 @@ void	nulluser()
 #endif
 	
 	/* Create a process to finish startup and start main */
-	
-        resume(create((void *)startup, INITSTK, INITPRIO,
-					"Startup process", 0, NULL));
-
+    resume(create((void *)startup, INITSTK, INITPRIO,
+                  "Startup process", 0, NULL));
 	/* Become the Null process (i.e., guarantee that the CPU has	*/
 	/*  something to run when no other process is ready to execute)	*/
-
 	while (TRUE) {
 		;		/* Do nothing */
 	}
-
 }
 
 
@@ -125,6 +120,7 @@ void	nulluser()
  */
 local process	startup(void)
 {
+    
 #ifdef ETHER0 /* if there's eth networking... */
 	
 	uint32	ipaddr;			/* Computer's IP address	*/
@@ -158,7 +154,7 @@ local process	startup(void)
 	
 #endif
 	/* Create a process to execute function main() */
-
+    kprintf("startup");
 	resume(create((void *)main, INITSTK, INITPRIO,
 					"Main process", 0, NULL));
 
@@ -196,25 +192,7 @@ static	void	sysinit()
 
 
 	/* Initialize system variables */
-    /* initialize queuearr */
-	queuearr[0]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //ready head
-	queuearr[1]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //ready tail
-	queuearr[2]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //sleep head
-	queuearr[3]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //sleep tail
-	
-	queuearr[0]->qkey=MAXKEY;
-	queuearr[1]->qkey=MINKEY;
-	queuearr[0]->qprev=NULL;
-	queuearr[1]->qnext=NULL;
-	queuearr[0]->qnext=queuearr[1];
-	queuearr[1]->qprev=queuearr[0];
-	
-	queuearr[2]->qkey=MAXKEY;
-	queuearr[3]->qkey=MINKEY;
-	queuearr[2]->qprev=NULL;
-	queuearr[3]->qnext=NULL;
-	queuearr[2]->qnext=queuearr[3];
-	queuearr[3]->qprev=queuearr[2];
+   
 
 
 	/* Count the Null process as the first process in the system */
@@ -261,7 +239,27 @@ static	void	sysinit()
 
 	/* Create a ready list for processes */
 
-	readylist = newqueue();
+	readylist = (qid16)NQENT;
+    
+    	/* initialize queuearr */
+   	queuearr[0]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //ready head
+   	queuearr[1]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //ready tail
+   	queuearr[2]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //sleep head
+   	queuearr[3]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //sleep tail
+    
+   	queuearr[0]->qkey=MAXKEY;
+   	queuearr[1]->qkey=MINKEY;
+   	queuearr[0]->qprev=NULL;
+   	queuearr[1]->qnext=NULL;
+   	queuearr[0]->qnext=queuearr[1];
+   	queuearr[1]->qprev=queuearr[0];
+    
+   	queuearr[2]->qkey=MAXKEY;
+   	queuearr[3]->qkey=MINKEY;
+   	queuearr[2]->qprev=NULL;
+   	queuearr[3]->qnext=NULL;
+    queuearr[2]->qnext=queuearr[3];
+    queuearr[3]->qprev=queuearr[2];
 	queuearr[0]->process_id=readylist;
 	queuearr[1]->process_id=readylist+1;
 
@@ -269,6 +267,7 @@ static	void	sysinit()
 	/* Initialize the real time clock */
 
 	clkinit();
+	
 	queuearr[2]->process_id=sleepq;
 	queuearr[3]->process_id=sleepq+1;
 

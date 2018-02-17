@@ -15,7 +15,7 @@ pid32	enqueue(
 {
 	qid16	tail, prev;		/* Tail & previous node indexes	*/
 
-	if (isbadqid(q) || isbadpid(pid)) {
+	if (isbadpid(pid)) {
 		return SYSERR;
 	}
 	if(q==readylist || q== sleepq)
@@ -38,6 +38,10 @@ pid32	enqueue(
 		tailnode->qprev=n;
 		return pid;
 	}
+    if(isbadqid(q))
+    {
+        return SYSERR;
+    }
 	tail = queuetail(q);
 	prev = queuetab[tail].qprev;
 

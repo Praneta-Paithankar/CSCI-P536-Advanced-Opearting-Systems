@@ -17,7 +17,7 @@ void	clkinit(void)
 
 	/* Allocate a queue to hold the delta list of sleeping processes*/
 
-	sleepq = newqueue();
+	sleepq = NQENT+2;
 
 	/* Initialize the preemption count */
 

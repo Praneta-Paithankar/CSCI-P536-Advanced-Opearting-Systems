@@ -13,7 +13,6 @@ status	ready(
 	)
 {
 	register struct procent *prptr;
-
 	if (isbadpid(pid)) {
 		return SYSERR;
 	}

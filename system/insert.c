@@ -15,23 +15,17 @@ status	insert(
 	int16	curr;			/* Runs through items in a queue*/
 	int16	prev;			/* Holds previous node index	*/
 
-	if (isbadqid(q) || isbadpid(pid)) {
+	if (isbadpid(pid)) {
 		return SYSERR;
 	}
-	if(q==readylist || q == sleepq) /*insert for readylist and sleepq*/
+	if(q==readylist) /*insert for readylist and sleepq*/
 	{
 		struct qnewentry *head,*tail,*n;
 		n=(struct qnewentry*) getmem(sizeof(struct qnewentry)); /*create new node*/
 		n->process_id=pid;
 		n->qkey=key;
-		if(q==readylist){
-			head=getreadyhead();
-			tail=getreadytail();
-		}
-		else{
-			head=getsleephead();
-			tail=getsleeptail();
-		}
+        head=getreadyhead();
+        tail=getreadytail();
 		while(head!=tail && head->qkey>=key) /*find node which has smaller priority*/
 		{	
 			head=head->qnext;
@@ -42,6 +36,10 @@ status	insert(
 		head->qprev=n;
 		return OK;
 	}
+    if(isbadqid(q))
+    {
+        return SYSERR;
+    }
 	curr = firstid(q);
 	while (queuetab[curr].qkey >= key) {
 		curr = queuetab[curr].qnext;

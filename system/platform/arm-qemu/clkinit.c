@@ -19,7 +19,7 @@ void	clkinit(void)
 	interruptVector[IRQ_TIMER] = clkhandler;
 	enable_irq(IRQ_TIMER);
 	clkupdate(platform.clkfreq / CLKTICKS_PER_SEC);
-	sleepq = newqueue();	/* Allocate a queue to hold the delta	*/
+    sleepq = NQENT+2;	/* Allocate a queue to hold the delta	*/
 				/*   list of sleeping processes		*/
 
 	preempt = QUANTUM;	/* Set the preemption time		*/
