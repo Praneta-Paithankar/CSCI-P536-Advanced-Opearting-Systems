@@ -18,7 +18,30 @@ status	insert(
 	if (isbadqid(q) || isbadpid(pid)) {
 		return SYSERR;
 	}
-
+	if(q==readylist || q == sleepq) /*insert for readylist and sleepq*/
+	{
+		struct qnewentry *head,*tail,*n;
+		n=(struct qnewentry*) getmem(sizeof(struct qnewentry)); /*create new node*/
+		n->process_id=pid;
+		n->qkey=key;
+		if(q==readylist){
+			head=getreadyhead();
+			tail=getreadytail();
+		}
+		else{
+			head=getsleephead();
+			tail=getsleeptail();
+		}
+		while(head!=tail && head->qkey>=key) /*find node which has smaller priority*/
+		{	
+			head=head->qnext;
+		}
+		head->qprev->qnext=n; /*change links*/
+		n->qprev=head->qprev;
+		n->qnext=head;
+		head->qprev=n;
+		return OK;
+	}
 	curr = firstid(q);
 	while (queuetab[curr].qkey >= key) {
 		curr = queuetab[curr].qnext;

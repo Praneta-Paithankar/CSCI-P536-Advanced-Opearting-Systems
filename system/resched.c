@@ -21,11 +21,9 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	}
 
 	/* Point to process table entry for the current (old) process */
-
 	ptold = &proctab[currpid];
-
 	if (ptold->prstate == PR_CURR) {  /* Process remains eligible */
-		if (ptold->prprio > firstkey(readylist)) {
+		if (ptold->prprio > getreadyhead()->qnext->qkey) {
 			return;
 		}
 
@@ -33,10 +31,11 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 
 		ptold->prstate = PR_READY;
 		insert(currpid, readylist, ptold->prprio);
+
 	}
 
 	/* Force context switch to highest priority ready process */
-
+	
 	currpid = dequeue(readylist);
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;

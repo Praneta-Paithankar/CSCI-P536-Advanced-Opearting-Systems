@@ -87,7 +87,6 @@ void	nulluser()
 	/* Enable interrupts */
 
 	enable();
-
 #ifdef ETHER0
 	/* Initialize the network stack and start processes */
 
@@ -103,7 +102,7 @@ void	nulluser()
 	
 	/* Create a process to finish startup and start main */
 	
-	resume(create((void *)startup, INITSTK, INITPRIO,
+        resume(create((void *)startup, INITSTK, INITPRIO,
 					"Startup process", 0, NULL));
 
 	/* Become the Null process (i.e., guarantee that the CPU has	*/
@@ -158,7 +157,6 @@ local process	startup(void)
 	}
 	
 #endif
-	
 	/* Create a process to execute function main() */
 
 	resume(create((void *)main, INITSTK, INITPRIO,
@@ -196,7 +194,28 @@ static	void	sysinit()
 	
 	meminit();
 
+
 	/* Initialize system variables */
+    /* initialize queuearr */
+	queuearr[0]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //ready head
+	queuearr[1]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //ready tail
+	queuearr[2]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //sleep head
+	queuearr[3]=(struct qnewentry*)getmem(sizeof(struct qnewentry)); //sleep tail
+	
+	queuearr[0]->qkey=MAXKEY;
+	queuearr[1]->qkey=MINKEY;
+	queuearr[0]->qprev=NULL;
+	queuearr[1]->qnext=NULL;
+	queuearr[0]->qnext=queuearr[1];
+	queuearr[1]->qprev=queuearr[0];
+	
+	queuearr[2]->qkey=MAXKEY;
+	queuearr[3]->qkey=MINKEY;
+	queuearr[2]->qprev=NULL;
+	queuearr[3]->qnext=NULL;
+	queuearr[2]->qnext=queuearr[3];
+	queuearr[3]->qprev=queuearr[2];
+
 
 	/* Count the Null process as the first process in the system */
 
@@ -243,10 +262,16 @@ static	void	sysinit()
 	/* Create a ready list for processes */
 
 	readylist = newqueue();
+	queuearr[0]->process_id=readylist;
+	queuearr[1]->process_id=readylist+1;
+
 
 	/* Initialize the real time clock */
 
 	clkinit();
+	queuearr[2]->process_id=sleepq;
+	queuearr[3]->process_id=sleepq+1;
+
 
 	for (i = 0; i < NDEVS; i++) {
 		init(i);

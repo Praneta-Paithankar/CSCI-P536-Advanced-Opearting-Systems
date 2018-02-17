@@ -27,13 +27,26 @@ interrupt clkhandler(void)
 
     /* If sleepq is not empty, decrement first key.   */
     /* If key reaches zero, call wakeup.              */
-    if (nonempty(sleepq) && (--firstkey(sleepq) <= 0))
+	struct qnewentry *head,*tail;
+	head=getsleephead();
+	tail=getsleeptail();
+	
+
+	if(head->qnext!=tail ){
+		head->qnext->qkey -=1;
+		if (head->qnext->qkey == 0){
+		/* sleepq nonempty, decrement the key of */
+		/* topmost process on sleepq		 */
+		wakeup();
+		}
+	}
+    /*if (nonempty(sleepq) && (--firstkey(sleepq) <= 0))
     {
         wakeup();
-    }
-    else
-    {
-        resched();
-    }
+    }*/
+    	else
+    	{
+    	    resched();
+    	}
 }
 

@@ -16,7 +16,23 @@ pid32	getfirst(
 	if (isempty(q)) {
 		return EMPTY;
 	}
-
+        if(q ==readylist || q==sleepq)
+	{
+		struct qnewentry *curr,*qhead;
+		if(q == readylist){ 
+			qhead=getreadyhead();
+		}
+		else{
+			qhead=getsleephead();
+		}
+		curr=qhead->qnext;
+		curr->qnext->qprev=qhead;
+		qhead->qnext=curr->qnext;
+		curr->qnext=NULL;
+		curr->qprev=NULL;
+		freemem((char * )curr,sizeof(struct qnewentry ));
+		
+	}
 	head = queuehead(q);
 	return getitem(queuetab[head].qnext);
 }
@@ -35,7 +51,26 @@ pid32	getlast(
 	if (isempty(q)) {
 		return EMPTY;
 	}
-
+	
+	if(q==readylist || q==sleepq)
+	{
+		struct qnewentry *curr,*qtail;
+		if(q == readylist) 
+		{
+			qtail=getreadytail();
+		}
+		else
+		{
+			qtail=getsleeptail();
+		}
+		curr=qtail->qprev;
+		curr->qprev->qnext=qtail;
+		qtail->qprev=curr->qprev;
+		curr->qnext=NULL;
+		curr->qprev=NULL;
+		freemem((char * )curr,sizeof(struct qnewentry ));
+		
+	}
 	tail = queuetail(q);
 	return getitem(queuetab[tail].qprev);
 }
@@ -49,7 +84,29 @@ pid32	getitem(
 	)
 {
 	pid32	prev, next;
-
+	if(proctab[pid].prstate==PR_READY || proctab[pid].prstate==PR_SLEEP)
+	{
+		struct qnewentry *head,*tail;
+		if(proctab[pid].prstate==PR_READY)
+		{
+			head=getreadyhead();
+			tail=getreadytail();
+		}
+		else
+		{
+			tail=getsleeptail();
+			head=getsleephead();
+		}
+		while(head!=tail && head->process_id==pid)
+		{
+			head=head->qnext;
+		}
+		if (head == tail) 
+			return SYSERR;
+		head->qprev->qnext=head->qnext;
+		head->qnext->qprev=head->qprev;
+		return pid;
+	}
 	next = queuetab[pid].qnext;	/* Following node in list	*/
 	prev = queuetab[pid].qprev;	/* Previous node in list	*/
 	queuetab[prev].qnext = next;

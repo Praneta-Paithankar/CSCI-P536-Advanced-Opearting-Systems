@@ -24,13 +24,18 @@ void	clkhandler()
 	}
 
 	/* Handle sleeping processes if any exist */
+	struct qnewentry *head,*tail;
+	head=getsleephead();
+	tail=getsleeptail();
+	
 
-	if(!isempty(sleepq)) {
+	if(head->qnext!=tail){
+		head->qnext->qkey -=1;
+		if(head->qnext->qkey == 0) {
 
 		/* Decrement the delay for the first process on the	*/
 		/*   sleep queue, and awaken if the count reaches zero	*/
 
-		if((--queuetab[firstid(sleepq)].qkey) <= 0) {
 			wakeup();
 		}
 	}

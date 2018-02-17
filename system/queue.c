@@ -18,7 +18,26 @@ pid32	enqueue(
 	if (isbadqid(q) || isbadpid(pid)) {
 		return SYSERR;
 	}
-
+	if(q==readylist || q== sleepq)
+	{
+		struct qnewentry * n=(struct qnewentry *) getmem(sizeof(struct qnewentry));
+		n->process_id=pid;
+		n->qkey=proctab[pid].prprio;
+		struct qnewentry * tailnode=NULL;
+		if(q==readylist)
+		{
+			tailnode=getreadytail();
+		}
+		else
+		{
+			tailnode=getsleeptail();
+		}
+		tailnode->qprev->qnext=n;
+		n->qprev=tailnode->qprev;
+		n->qnext=tailnode;
+		tailnode->qprev=n;
+		return pid;
+	}
 	tail = queuetail(q);
 	prev = queuetab[tail].qprev;
 
@@ -38,13 +57,31 @@ pid32	dequeue(
 	)
 {
 	pid32	pid;			/* ID of process removed	*/
-
+	if(q==readylist || q== sleepq)
+	{
+		struct qnewentry *headnode,*curr;
+		if(q==readylist)
+		{
+			headnode=getreadyhead();
+		}
+		else
+		{
+			headnode=getsleephead();
+		}
+		curr=headnode->qnext;
+		curr->qnext->qprev=headnode;
+		headnode->qnext=curr->qnext;
+		curr->qnext=NULL;
+		curr->qprev=NULL;
+		pid=curr->process_id;
+		freemem((char *)curr,sizeof(struct qnewentry));
+		return pid;
+	}
 	if (isbadqid(q)) {
 		return SYSERR;
 	} else if (isempty(q)) {
 		return EMPTY;
 	}
-
 	pid = getfirst(q);
 	queuetab[pid].qprev = EMPTY;
 	queuetab[pid].qnext = EMPTY;

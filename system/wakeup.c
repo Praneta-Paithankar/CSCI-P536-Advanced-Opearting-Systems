@@ -11,10 +11,13 @@ void	wakeup(void)
 	/* Awaken all processes that have no more time to sleep */
 
 	resched_cntl(DEFER_START);
-	while (nonempty(sleepq) && (firstkey(sleepq) <= 0)) {
+	struct qnewentry *head,*tail;
+	head=getsleephead();
+	tail=getsleeptail();
+	while(head->qnext!=tail && head->qnext->qkey<=0)
+	{
 		ready(dequeue(sleepq));
 	}
-
 	resched_cntl(DEFER_STOP);
 	return;
 }

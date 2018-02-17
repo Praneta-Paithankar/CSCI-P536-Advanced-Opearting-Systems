@@ -18,16 +18,17 @@ struct	qentry	{		/* One per process plus two per list	*/
 	qid16	qprev;		/* Index of previous process or head	*/
 };
 
-struct qnewentry{
-	int32 qkey;
-	pid32 process_id;
-	struct qnewentry* qnext;
-	struct qnewentry* qprev;
-}
+struct qnewentry{              /* new structure to store processes in queue */
+	int32 qkey;		/* key on which the queue is ordered */
+	pid32 process_id;	/* process id */
+	struct qnewentry* qnext;	/* index of next process or tail */
+	struct qnewentry* qprev;	/* index of previous process or head */
+};
 
 extern	struct qentry	queuetab[];
 
-struct qnewentry*  queuearr[4];
+struct qnewentry  *queuearr[4]; /*array to store head and tail of ready queue and sleep queue*/
+
 /* Inline queue manipulation functions */
 
 #define	queuehead(q)	(q)
@@ -38,6 +39,14 @@ struct qnewentry*  queuearr[4];
 #define	nonempty(q)	(firstid(q) <  NPROC)
 #define	firstkey(q)	(queuetab[firstid(q)].qkey)
 #define	lastkey(q)	(queuetab[ lastid(q)].qkey)
+#define getreadyhead()	queuearr[0]	/*queuearr[0] stores head of ready queue*/
+#define getreadytail()	queuearr[1]
+#define getsleephead()	queuearr[2]
+#define getsleeptail()	queuearr[3]
+
+
+
+
 
 /* Inline to check queue id assumes interrupts are disabled */
 

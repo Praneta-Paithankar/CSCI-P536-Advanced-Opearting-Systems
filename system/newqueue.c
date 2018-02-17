@@ -10,7 +10,6 @@ qid16	newqueue(void)
 {
 	static qid16	nextqid=NPROC;	/* Next list in queuetab to use	*/
 	qid16		q;		/* ID of allocated queue 	*/
-
 	q = nextqid;
 	if (q > NQENT) {		/* Check for table overflow	*/
 		return SYSERR;

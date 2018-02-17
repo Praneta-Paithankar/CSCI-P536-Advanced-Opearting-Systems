@@ -36,12 +36,15 @@ void	clkhandler()
 
 	/* check if sleep queue is empty */
 
-	if(!isempty(sleepq)) {
-
+	struct qnewentry *head,*tail;
+	head=getsleephead();
+	tail=getsleeptail();
+	
+	if(head->qnext!=tail){
 		/* sleepq nonempty, decrement the key of */
 		/* topmost process on sleepq		 */
-
-		if((--queuetab[firstid(sleepq)].qkey) == 0) {
+		head->qnext->qkey -=1;
+		if(head->qnext->qkey == 0) {
 
 			wakeup();
 		}
