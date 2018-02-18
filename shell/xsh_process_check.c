@@ -8,7 +8,7 @@
 void p1()
 {
 	
-	printf("process1\n");
+	printf("process1 priority=24\n");
 	sleep(1);
 	printf("process1 after sleep\n");
 
@@ -17,7 +17,7 @@ void p1()
 
 void p2()
 {
-	printf("process2\n");
+	printf("process2 priority=25\n");
 	sleep(1);
 	printf("process2 after sleep\n");
 }
