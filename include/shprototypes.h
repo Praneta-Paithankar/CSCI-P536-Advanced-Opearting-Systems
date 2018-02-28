@@ -7,6 +7,9 @@ extern shellcmd xsh_hello	(int, char *[]);
 /* in file xsh_process_ring.c*/
 extern shellcmd xsh_process_ring(int argc, char *argv[]);
 
+/* in file xsh_future_test.c*/
+extern shellcmd xsh_future_test(int args,char * argv[]);
+
 /* in file xsh_arp.c */
 extern	shellcmd  xsh_arp	(int32, char *[]);
 
