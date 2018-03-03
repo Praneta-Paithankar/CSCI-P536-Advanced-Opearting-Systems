@@ -2,24 +2,10 @@
 #include <future.h>
 
 uint32 future_ring(future *in, future *out);
-uint32 future_test();
+
 /*run command to check future*/
 shellcmd xsh_future_test(int nargs,char * args[])
 {
-    if (nargs == 3 && (strncmp(args[1], "future_test",11) == 0) &&(strncmp(args[2], "-r", 2) == 0))
-    {
-        future_test();
-    }
-    else
-    {
-        printf("Invalid option");
-        return 1;
-    }
-    return 0;
-}
-uint32 future_test()
-{
-    int ring = 0;
     int future_flags = 0;
     int ring_count = 10;
     int final_val;
@@ -28,10 +14,9 @@ uint32 future_test()
     printf("no support for futures (_FUTURE_H_ not defined.)\n");
     return OK;
 #endif
-    
-    ring = 1;
-    printf("Producer/consumer process ring\n");
-    if (ring == 1) {
+    if (nargs == 3 && (strncmp(args[1], "future_test",12) == 0) &&(strncmp(args[2], "-r", 3) == 0))
+    {
+        printf("Producer/consumer process ring\n");
         future *first, *in, *out = NULL;
         first = future_alloc(future_flags);
         in = first;
@@ -44,9 +29,13 @@ uint32 future_test()
         future_set(first, &ring_count);
         future_get(out, &final_val);
         printf("master gets %d\n", final_val);
-        return(OK);
     }
-    return(OK);
+    else
+    {
+        printf("Invalid option");
+        return 1;
+    }
+    return 0;
 }
 
 uint future_ring(future *in, future *out) {
