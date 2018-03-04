@@ -1,6 +1,9 @@
 #include<xinu.h>
 #include <future.h>
-
+/* get the value from future.
+   if future is menty then it returns SYSERR
+   else it stores value of future in value variable.
+ */
 syscall future_get(future *f, int *value)
 {
     intmask    mask;            /* Saved interrupt mask        */

@@ -1,7 +1,11 @@
 #include<xinu.h>
 #include<future.h>
 
-
+/*Allocates memory.
+ Returns:
+    structure future * if successful
+    Null if memory is not allocated or future_flag is not FUTURE_EXCLUSIVE
+ */
 future* future_alloc(int future_flag)
 {
     future* future_node=(future *) getmem(sizeof(future));
