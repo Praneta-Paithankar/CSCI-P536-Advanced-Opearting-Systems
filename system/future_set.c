@@ -16,21 +16,83 @@ syscall future_set(future *f, int *value)
         restore(mask);
         return SYSERR;
     }
-    if(f->state==FUTURE_EMPTY)      // future is empty
+    if(f->flag == FUTURE_EXCLUSIVE)
     {
-        *f->value=*value;
-        f->state= FUTURE_VALID;
+        if(f->state==FUTURE_EMPTY)      // future is empty
+        {
+            *f->value=*value;
+            f->state= FUTURE_VALID;
+        }
+        else if(f->state == FUTURE_WAITING)
+        {
+            *f->value=*value;
+            f->state= FUTURE_VALID;
+            resume(f->pid);   //resume process
+        }
+        else
+        {
+            restore(mask);
+            return SYSERR;
+        }
     }
-    else if(f->state == FUTURE_WAITING)
+    else if(f->flag == FUTURE_SHARED)
     {
-        *f->value=*value;
-        f->state= FUTURE_VALID;
-        resume(f->pid);   //resume process
+        if(f->state==FUTURE_EMPTY)      // future is empty
+        {
+            *f->value=*value;
+            f->state= FUTURE_VALID;
+        }
+        else if(f->state == FUTURE_WAITING)
+        {
+            *f->value=*value;
+            f->state= FUTURE_VALID;
+            f_queue* head= f->get_queue;
+            while(head!=NULL){
+                resume(head->process_id);//resume process
+                head=head->qnext;
+            }
+        }
+        else
+        {
+            restore(mask);
+            return SYSERR;
+        }
     }
-    else
+    else if(f->flag == FUTURE_QUEUE)
     {
-        restore(mask);
-        return SYSERR;
+        if(f->get_queue!=NULL)
+        {
+            *f->value=*value;
+            //f->state= FUTURE_VALID;
+            resume(f->get_queue->process_id);   //resume process
+            f_queue* temp =f->get_queue;
+            f->get_queue=f->get_queue->qnext;
+            freemem((char* )temp,sizeof(f_queue));
+        }
+        else
+        {
+            if(f->set_queue==NULL)
+            {
+                f->set_queue=(f_queue *) getmem(sizeof(f_queue));
+                f->set_queue->process_id = getpid();
+                f->set_queue->qnext = NULL;
+                suspend(getpid());    //suspend process
+                *f->value=*value;
+            }
+            else
+            {
+                f_queue* head= f->set_queue;
+                while (head->qnext!=NULL)
+                {
+                    head=head->qnext;
+                }
+                head->qnext=(f_queue *) getmem(sizeof(f_queue));
+                head->qnext->process_id=getpid();
+                head->qnext->qnext=NULL;
+                suspend(getpid());    //suspend process
+                *f->value=*value;
+            }
+        }
     }
     restore(mask);
     return OK;

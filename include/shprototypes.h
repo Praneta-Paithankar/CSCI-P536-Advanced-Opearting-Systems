@@ -10,6 +10,9 @@ extern shellcmd xsh_process_ring(int argc, char *argv[]);
 /* in file xsh_future_test.c*/
 extern shellcmd xsh_future_test(int args,char * argv[]);
 
+/* in file xsh_future_test.c*/
+extern shellcmd xsh_future_test2(int nargs,char * args[]);
+
 /* in file xsh_arp.c */
 extern	shellcmd  xsh_arp	(int32, char *[]);
 
