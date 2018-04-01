@@ -8,9 +8,9 @@
 #define FUTURE_VALID    2
 
 /* modes of operation for future*/
-#define FUTURE_EXCLUSIVE  0
-#define FUTURE_SHARED   1
-#define FUTURE_QUEUE    2
+#define FUTURE_EXCLUSIVE  1
+#define FUTURE_SHARED   2
+#define FUTURE_QUEUE    3
 
 typedef struct futent
 {

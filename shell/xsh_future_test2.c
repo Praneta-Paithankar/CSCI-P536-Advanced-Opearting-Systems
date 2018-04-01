@@ -1,30 +1,10 @@
 #include <xinu.h>
 #include <future.h>
 
-uint future_prod(future *fut) {
-    int i, j;
-    //static int count=0;
-    j = (int)fut;
-    for (i=0; i<1000; i++) {
-        j += i;
-    }
-//    j=count;
-//    count++;
-    future_set(fut, &j);
-    return OK;
-}
+extern uint future_prod(future *fut);
 
-uint future_cons(future *fut) {
-    
-    int i, status;
-    status = future_get(fut, &i);
-    if (status < 1) {
-        printf("future_get failed\n");
-        return -1;
-    }
-    printf("it produced %d\n", i);
-    return OK;
-}
+extern uint future_cons(future *fut);
+
 
 /*run command to check future*/
 shellcmd xsh_future_test2(int nargs,char * args[])
@@ -35,7 +15,6 @@ shellcmd xsh_future_test2(int nargs,char * args[])
     #endif
 
     future *f_exclusive, *f_shared, *f_queue;
-        
     f_exclusive = future_alloc(FUTURE_EXCLUSIVE);
     f_shared = future_alloc(FUTURE_SHARED);
     f_queue = future_alloc(FUTURE_QUEUE);
@@ -53,6 +32,7 @@ shellcmd xsh_future_test2(int nargs,char * args[])
 
     
     // Test FUTURE_QUEUE
+
     resume( create(future_cons, 1024, 20, "fcons6", 1, f_queue) );
     resume( create(future_cons, 1024, 20, "fcons7", 1, f_queue) );
     resume( create(future_cons, 1024, 20, "fcons7", 1, f_queue) );
@@ -65,7 +45,4 @@ shellcmd xsh_future_test2(int nargs,char * args[])
     sleep(2);
     return 0;
 }
-void test_future()
-{
-   
-}
+

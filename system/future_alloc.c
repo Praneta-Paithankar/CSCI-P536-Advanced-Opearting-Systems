@@ -13,7 +13,10 @@ future* future_alloc(int future_flag)
     {
         return NULL;
     }
-    //|| future_flag != FUTURE_EXCLUSIVE || future_flag != FUTURE_SHARED || future_flag != FUTURE_QUEUE
+    if(future_flag != FUTURE_EXCLUSIVE && future_flag != FUTURE_SHARED && future_flag != FUTURE_QUEUE)
+    {
+        return NULL;
+    }
     future_node->value = (int *)getmem(sizeof(int));
     future_node->flag = future_flag;
     future_node->state = FUTURE_EMPTY;
