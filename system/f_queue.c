@@ -1,6 +1,7 @@
 #include<xinu.h>
 #include<f_queue.h>
 
+//Enqueue process in queue
 void f_enqueue(f_queue** queue,pid32 pid)
 {
     if (*queue == NULL) {
@@ -20,7 +21,7 @@ void f_enqueue(f_queue** queue,pid32 pid)
         head->qnext->qnext = NULL;
     }
 }
-
+//Dequeue the process from queue
 pid32 f_dequeue(f_queue** queue)
 {
     if(*queue == NULL)
