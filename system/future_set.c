@@ -81,10 +81,10 @@ syscall future_set(future *f, int *value)
         else
         {
             restore(mask);
-            f->state = FUTURE_EMPTY;
             f_enqueue(&(f->set_queue),getpid());
             suspend(getpid());    //suspend process
             *f->value=*value;
+            f->state = FUTURE_VALID;
         }
     }
     

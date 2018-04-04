@@ -74,6 +74,7 @@ syscall future_get(future *f, int *value)
     }
     else if(f->flag == FUTURE_QUEUE)
     {
+	
         if (f->set_queue != NULL) {
             restore(mask);
             pid32 p_id=f_dequeue(&(f->set_queue));
@@ -88,6 +89,7 @@ syscall future_get(future *f, int *value)
             f->state=FUTURE_WAITING;
             suspend(getpid()); //suspend process
             *value = *f->value;
+            f->state=FUTURE_EMPTY;
         }
     }
     

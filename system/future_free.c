@@ -7,14 +7,16 @@ syscall future_free(future* f)
     f_queue* head=f->set_queue;
     while (head!=NULL) {
         kill(head->process_id);
+        f_queue* temp=head->qnext;
         freemem((char *)head,sizeof(f_queue));  //free set_queue
-        head=head->qnext;
+        head=temp;
     }
     head=f->get_queue;
     while (head!=NULL) {
         kill(head->process_id); //Kill processes
+        f_queue* temp=head->qnext;
         freemem((char *)head,sizeof(f_queue));  //free get_queue
-        head=head->qnext;
+        head=temp;
     }
    
     return freemem((char *)f,sizeof(future));

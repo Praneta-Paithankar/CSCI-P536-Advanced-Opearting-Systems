@@ -94,7 +94,7 @@ shellcmd xsh_future_test(int nargs,char * args[])
             }
             future_set(fibfut[0],&zero);
             
-            for (i=0; i<=N; i++) {
+            for (i=1; i<=N; i++) {
                 resume(create(ffib,1024,20,"fib",1,i));
 
             }
@@ -155,7 +155,6 @@ int ffib(int n) {
     
     future_get(fibfut[n-2], &minus2);
     future_get(fibfut[n-1], &minus1);
-    
     this = minus1 + minus2;
     
     future_set(fibfut[n], &this);
