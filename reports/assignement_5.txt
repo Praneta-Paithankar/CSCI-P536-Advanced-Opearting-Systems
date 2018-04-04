@@ -1,0 +1,45 @@
+ Assignment 5 Report
+Futures: Part 2
+
+
+
+In this assignment, we added two future states FUTURE_SHARED and FUTURE_QUEUE.
+
+I created future queue structure in f_queue.h
+
+typedef struct f_queue
+{
+    pid32 process_id;
+    struct f_queue* qnext;
+}f_queue;
+
+Here f_queue will store the process id and pointer to next f_queue node.
+
+Implementation of future_queue is in f_queue.c
+
+void f_enqueue (f_queue** queue, pid32 pid) 
+
+This function is used for queuing the process in queue.
+
+pid32 f_dequeue(f_queue** queue)
+
+This function is used to remove the process id from the queue.
+
+Queue functions are implemented as FIFO.
+
+Future_alloc() is used to allocate the memory to future. In this function, get_queue and set_queue are set as NULL.
+
+future_free() is used to free the future. If get_queue and set_queue are not empty then all processes in these queues are killed.
+
+Future_get function returns the value stored in the future. In case of FUTURE_SHARED, if future_state is FUTURE_VALID then Future_get returns the value present in future. If future_state is FUTURE_EMPTY, then requesting process is stored in get_queue and that process is suspended. When future_state becomes valid, all processes are resumed, and future value is returned. In case of FUTURE_QUEUE, if there is a process present in set_queue, that process is resumed. Future stores the value set by recently released process. This value is returned to the process which invoked future_get function. If there is no process present in set_queue, requesting process is stored in get_queue and that process is suspended.
+
+
+Future_set function sets the value. In case of FUTURE_SHARED, if future state is FUTURE_EMPTY then value of future is set. If Future_state is FUTURE_WAITING, value of future is set, and processes present in get_queue are resumed. If future_state is FUTURE_VALID, then error is returned. In case of FUTURE_QUEUE, if there is a process present in get_queue, that process is resumed. Future stores the value set by calling process. This value is returned to the released process. If there is no process present in get_queue, requesting process is stored in set_queue and that process is suspended
+
+For test code of Fibonacci series, I used double pointer to allocate memory dynamically. Futures  have  FUTURE_SHARED flag.
+ 
+
+ 
+
+
+
