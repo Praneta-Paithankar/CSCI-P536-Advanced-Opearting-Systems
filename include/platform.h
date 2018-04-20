@@ -63,6 +63,8 @@ struct platform
 
 extern struct platform platform;
 
+
+#define FS 1
 /* Max RAM addresses */
 #define MAXADDR_DEFAULT  0x00800000 /**< default  8MB RAM */
 #define MAXADDR_WRT54G   0x00800000 /**< G    has 8MB RAM */
