@@ -1,3 +1,6 @@
+Assignment 6: RAM File System
+
+
 Following functions are implemented in this assignment:
 
 1. int fs_create(char *filename, int mode) :
