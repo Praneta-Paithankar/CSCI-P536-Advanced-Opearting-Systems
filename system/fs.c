@@ -248,7 +248,7 @@ int fs_open(char *filename, int flags) {
                     oft[j].fileptr = 0;
                     oft[j].de = &fsd.root_dir.entry[i];
                     oft[j].in = node;
-                    oft[j].state = FSTATE_CLOSED;
+                    oft[j].state = FSTATE_OPEN;
                     return j;
                 }
             }
